@@ -1,0 +1,29 @@
+# make shell script executable powershell: 
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+
+# make shell script executable mac:
+chmod +x build_image.sh
+
+----------------------------------------------------------------
+
+# aws cli command to create an amazon ecr repository
+aws ecr create-repository --repository-name <repository-name> --region <region>
+  
+----------------------------------------------------------------
+
+# build docker image
+docker build -t <image-tag> .
+
+# retag docker image 
+docker tag <image-tag> <repository-uri>
+
+# login to ecr
+aws ecr get-login-password | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+
+# push docker image to ecr repository 
+docker push <repository-uri>
+  
+----------------------------------------------------------------
+
+# shh tennel command for powershell
+ssh -i <key_pier.pem> ec2-user@<public-ip> -L 3306:<rds-endpoint>:3306 -N
